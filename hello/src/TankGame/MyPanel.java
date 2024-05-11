@@ -7,11 +7,11 @@ import java.awt.event.KeyListener;
 
 public class MyPanel extends JPanel implements KeyListener {//实现键盘监听器
 
-    Tank cy=null;
-    Tank mzk=null;
+    Hero cy=null;
+    Enemy mzk=null;
     public MyPanel(){
-        this.cy = new Tank(10, 10, 0, 0);//初始化己方坦克x，y，方向，类型
-        this.mzk = new Tank(500, 500, 0, 1);//初始化敌方坦克x，y，方向，类型
+        this.cy = new Hero(10, 10, 0, 0);//初始化己方坦克x，y，方向，类型
+        this.mzk = new Enemy(500, 500, 0, 1);//初始化敌方坦克x，y，方向，类型
     }
 
     @Override
@@ -43,8 +43,27 @@ public class MyPanel extends JPanel implements KeyListener {//实现键盘监听
                 g.fillOval(x+10,y+20,20,20);//炮塔
                 g.drawLine(x+20,y+30,x+20,y);//炮管
                 break;
-            default:
-                System.out.println("+++");
+            case 1://方向向下
+                g.fill3DRect(x,y,10,60,false);//左轮
+                g.fill3DRect(x+30,y,10,60,false);//右轮
+                g.fill3DRect(x+10,y+10,20,40,false);//身体
+                g.fillOval(x+10,y+20,20,20);//炮塔
+                g.drawLine(x+20,y+30,x+20,y+60);//炮管
+                break;
+            case 2://方向向右
+                g.fill3DRect(x,y,60,10,false);//上轮
+                g.fill3DRect(x,y+30,60,10,false);//下轮
+                g.fill3DRect(x+10,y+10,40,20,false);//身体
+                g.fillOval(x+20,y+10,20,20);//炮塔
+                g.drawLine(x+30,y+20,x+60,y+20);//炮管
+                break;
+            case 3://方向向左
+                g.fill3DRect(x,y,60,10,false);//上轮
+                g.fill3DRect(x,y+30,60,10,false);//下轮
+                g.fill3DRect(x+10,y+10,40,20,false);//身体
+                g.fillOval(x+20,y+10,20,20);//炮塔
+                g.drawLine(x+30,y+20,x,y+20);//炮管
+                break;
         }
     }
 
@@ -55,22 +74,25 @@ public class MyPanel extends JPanel implements KeyListener {//实现键盘监听
 
     @Override
     public void keyPressed(KeyEvent e) {//按下键盘
-        int x=cy.getX();//获取按下键盘时cy的横坐标
-        int y=cy.getY();//获取按下键盘时cy的纵坐标
         switch (e.getKeyCode()){//检测按下的键
             case KeyEvent.VK_W://向上
-                cy.setY(--y);
+                cy.moveUp();
+                cy.setDirection(0);
                 break;
             case KeyEvent.VK_S://向下
-                cy.setY(++y);
+                cy.moveDown();
+                cy.setDirection(1);
                 break;
             case KeyEvent.VK_D://向右
-                cy.setX(++x);
+                cy.moveRight();
+                cy.setDirection(2);
                 break;
             case KeyEvent.VK_A://向左
-                cy.setX(--x);
+                cy.moveLeft ();
+                cy.setDirection(3);
                 break;
             default:
+                break;
         }
         this.repaint();//重绘
     }
