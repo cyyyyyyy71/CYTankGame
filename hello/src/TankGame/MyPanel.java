@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class MyPanel extends JPanel implements KeyListener {//实现键盘监听器
+public class MyPanel extends JPanel implements KeyListener,Runnable {//实现键盘监听器与多线程
 
     Hero cy=null;
     Enemy mzk=null;
@@ -22,6 +22,10 @@ public class MyPanel extends JPanel implements KeyListener {//实现键盘监听
         drawTank(g,cy);//绘制己方坦克
         drawTank(g,mzk);//绘制敌方坦克
 
+        if (cy.getBullet()!=null && cy.getBullet().isLive()){//当己方坦克有子弹且子弹处于存活状态
+            Bullet cyBullet=cy.getBullet();//获取己方子弹
+            g.fill3DRect(cyBullet.getX()-1,cyBullet.getY()-1,3,3,false);//绘制己方子弹
+        }
     }
     public void drawTank(Graphics g,Tank tank) {//绘制坦克
         int x=tank.getX();//获取坦克横坐标
@@ -91,14 +95,31 @@ public class MyPanel extends JPanel implements KeyListener {//实现键盘监听
                 cy.moveLeft ();
                 cy.setDirection(3);
                 break;
+            case KeyEvent.VK_J://发射子弹
+                Bullet bullet = new Bullet(cy);//以己方坦克状态创建子弹
+                cy.setBullet(bullet);//设置为己方子弹
+                new Thread(bullet).start();//开启子弹线程
+                break;
             default:
                 break;
         }
-        this.repaint();//重绘
+        this.repaint();//按一次键盘就会重绘
     }
 
     @Override
     public void keyReleased(KeyEvent e) {//松开键盘
 
+    }
+
+    @Override
+    public void run() {//面板多线程实现不断重绘
+        while (true) {//
+            try {
+                Thread.sleep(10);//间歇100ms重绘一次
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            this.repaint();
+        }
     }
 }

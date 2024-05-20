@@ -6,6 +6,7 @@ public class Tank {
     private int direction;//0代表向上，1代表向下，2代表向右，3代表向左
     private int type;//0代表己方，1代表敌方
     private int speed=20;//移动速度
+    private Bullet bullet=null;
 
     public Tank(int x, int y, int direction, int type) {
         this.x = x;
@@ -65,5 +66,13 @@ public class Tank {
 
     public void setSpeed(int speed) {
         this.speed = speed;
+    }
+
+    public Bullet getBullet() {
+        return bullet;
+    }
+
+    public void setBullet(Bullet bullet) {
+        this.bullet = bullet;
     }
 }
